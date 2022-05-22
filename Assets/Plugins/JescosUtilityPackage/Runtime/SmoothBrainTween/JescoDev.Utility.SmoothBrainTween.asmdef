@@ -1,0 +1,16 @@
+{
+    "name": "JescoDev.Utility.SmoothBrainTween",
+    "rootNamespace": "JescoDev.Utility.SmoothBrainTween",
+    "references": [
+        "GUID:02f771204943f4a40949438e873e3eff"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

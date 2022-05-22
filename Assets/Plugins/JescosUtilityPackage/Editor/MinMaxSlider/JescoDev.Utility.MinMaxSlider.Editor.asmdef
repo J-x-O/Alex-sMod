@@ -1,0 +1,18 @@
+{
+    "name": "JescoDev.Utility.MinMaxSlider.Editor",
+    "rootNamespace": "JescoDev.Utility.MinMaxSlider.Editor",
+    "references": [
+        "GUID:68c7bad00efaadb44978e435c3bea837"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "JescoDev.Utility.Optional",
+    "rootNamespace": "JescoDev.Utility.Optional",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

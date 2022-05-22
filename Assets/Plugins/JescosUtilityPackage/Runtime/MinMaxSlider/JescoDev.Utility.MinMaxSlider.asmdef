@@ -1,0 +1,14 @@
+{
+    "name": "JescoDev.Utility.MinMaxSlider",
+    "rootNamespace": "JescoDev.Utility.MinMaxSlider",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

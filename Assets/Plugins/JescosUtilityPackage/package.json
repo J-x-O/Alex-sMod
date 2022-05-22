@@ -1,0 +1,15 @@
+{
+  "name": "com.jescos-utility-package",
+  "version": "0.1.1",
+  "displayName": "Jesco's Utility Package",
+  "description": "This Package contains all of the essential Plugins i use for any Project",
+  "unity": "2019.1",
+  "keywords": [
+    "Jesco",
+    "Utility",
+    "Gaming"
+  ],
+  "author": {
+    "name": "Jesco"
+  }
+}

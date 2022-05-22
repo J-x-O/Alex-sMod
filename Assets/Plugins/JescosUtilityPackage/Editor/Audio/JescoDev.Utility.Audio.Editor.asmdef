@@ -1,0 +1,18 @@
+{
+    "name": "JescoDev.Utility.Audio.Editor",
+    "rootNamespace": "JescoDev.Utility.Audio.Editor",
+    "references": [
+        "GUID:a3615b87226dba04aad398e7b890df4b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

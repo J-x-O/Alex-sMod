@@ -1,0 +1,19 @@
+{
+    "name": "JescoDev.Utility.Audio",
+    "rootNamespace": "JescoDev.Utility.Audio",
+    "references": [
+        "GUID:eec6a16c1d3dcd84ea86607bb459635b",
+        "GUID:347c7d57bee577f40bb73c37693c325a",
+        "GUID:68c7bad00efaadb44978e435c3bea837",
+        "GUID:7e7716087957c7a40b53b1c1f0fd2287"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
