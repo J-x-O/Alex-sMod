@@ -4,6 +4,9 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Level/Scenes/PlaygroundTheo.unity
+    guid: e70f9e707c8f5d049b0dac0406e35654
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 7f9c5318ee0a37348a3e3d1c941a7c24, type: 2}
