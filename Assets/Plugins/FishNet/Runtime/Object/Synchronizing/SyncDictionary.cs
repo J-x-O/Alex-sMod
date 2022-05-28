@@ -238,14 +238,11 @@ namespace FishNet.Object.Synchronizing
 
                 //Clear does not need to write anymore data so it is not included in checks.
                 if (change.Operation == SyncDictionaryOperation.Add ||
-                    change.Operation == SyncDictionaryOperation.Set)
+                    change.Operation == SyncDictionaryOperation.Set ||
+                    change.Operation == SyncDictionaryOperation.Remove)
                 {
                     writer.Write(change.Key);
                     writer.Write(change.Value);
-                }
-                else if (change.Operation == SyncDictionaryOperation.Remove)
-                {
-                    writer.Write(change.Key);
                 }
             }
 
@@ -321,6 +318,7 @@ namespace FishNet.Object.Synchronizing
                 else if (operation == SyncDictionaryOperation.Remove)
                 {
                     key = reader.Read<TKey>();
+                    value = reader.Read<TValue>();
                     objects.Remove(key);
                 }
 
@@ -474,15 +472,11 @@ namespace FishNet.Object.Synchronizing
         /// </summary>
         /// <param name="key">Key to remove.</param>
         /// <returns>True if removed.</returns>
-        public bool Remove(TKey key)
-        {
-            if (Collection.Remove(key))
-            {
-                AddOperation(SyncDictionaryOperation.Remove, key, default);
-                return true;
-            }
-
-            return false;
+        public bool Remove(TKey key) {
+            if (!Collection.TryGetValue(key, out TValue value)) return false;
+            if (!Collection.Remove(key)) return false;
+            AddOperation(SyncDictionaryOperation.Remove, key, value);
+            return true;
         }
 
 

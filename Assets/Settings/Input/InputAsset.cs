@@ -62,6 +62,42 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""5e0b09d1-c31e-4c48-9f22-78cd03162d1e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Throw"",
+                    ""type"": ""Button"",
+                    ""id"": ""879cc85d-a4f9-4004-8e8c-8e8de37a932b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CycleWeapons"",
+                    ""type"": ""Value"",
+                    ""id"": ""06f23c23-3f23-4e64-b3e0-d2f22dc91a98"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SpawnDebugWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""401e51d6-9c5f-470b-b145-983bce0f3774"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -238,6 +274,50 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58c41a4e-3c76-4a8a-9a96-255cbf971665"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""269b592e-c27b-4363-8392-28f45dba8466"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1efe15ee-c9ba-43a0-9171-49638a50b8fa"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CycleWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09b289ae-4d20-4828-bf95-2540142bfaaa"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SpawnDebugWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -697,6 +777,10 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
+        m_Player_CycleWeapons = m_Player.FindAction("CycleWeapons", throwIfNotFound: true);
+        m_Player_SpawnDebugWeapon = m_Player.FindAction("SpawnDebugWeapon", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -772,6 +856,10 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Throw;
+    private readonly InputAction m_Player_CycleWeapons;
+    private readonly InputAction m_Player_SpawnDebugWeapon;
     public struct PlayerActions
     {
         private @InputAsset m_Wrapper;
@@ -780,6 +868,10 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @Throw => m_Wrapper.m_Player_Throw;
+        public InputAction @CycleWeapons => m_Wrapper.m_Player_CycleWeapons;
+        public InputAction @SpawnDebugWeapon => m_Wrapper.m_Player_SpawnDebugWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -801,6 +893,18 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Throw.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrow;
+                @Throw.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrow;
+                @Throw.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrow;
+                @CycleWeapons.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCycleWeapons;
+                @CycleWeapons.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCycleWeapons;
+                @CycleWeapons.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCycleWeapons;
+                @SpawnDebugWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpawnDebugWeapon;
+                @SpawnDebugWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpawnDebugWeapon;
+                @SpawnDebugWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpawnDebugWeapon;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -817,6 +921,18 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
+                @Throw.started += instance.OnThrow;
+                @Throw.performed += instance.OnThrow;
+                @Throw.canceled += instance.OnThrow;
+                @CycleWeapons.started += instance.OnCycleWeapons;
+                @CycleWeapons.performed += instance.OnCycleWeapons;
+                @CycleWeapons.canceled += instance.OnCycleWeapons;
+                @SpawnDebugWeapon.started += instance.OnSpawnDebugWeapon;
+                @SpawnDebugWeapon.performed += instance.OnSpawnDebugWeapon;
+                @SpawnDebugWeapon.canceled += instance.OnSpawnDebugWeapon;
             }
         }
     }
@@ -950,6 +1066,10 @@ public partial class @InputAsset : IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
+        void OnThrow(InputAction.CallbackContext context);
+        void OnCycleWeapons(InputAction.CallbackContext context);
+        void OnSpawnDebugWeapon(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

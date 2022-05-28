@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
+using AlexMod.Utility;
 using Beta.Devtools;
+using FishNet.Managing.Timing;
 using UnityEngine;
 
 namespace GameProgramming.Movement {
     
-    public class GroundCheck : MonoBehaviour {
+    public class GroundCheck : NetworkBehaviourTimeSubscribtion {
 
         /// <summary> An Event that will be thrown, as soon as ground is initially touched </summary>
         public event Action OnGrounded;
@@ -21,18 +23,11 @@ namespace GameProgramming.Movement {
         [Tooltip("The Dimensions of the Box, we will always extend downwards using the Y-Axis")]
         [SerializeField] private Vector3 _dimensions;
 
-        [Tooltip("How often we will refresh the GroundCheck")]
-        [SerializeField] private float _refreshRate = 0.1f;
-
         private Coroutine _refreshCoroutine;
         
         private Vector3 _hitBoxCenter
             => (_target.Enabled ? _target.Value.position : transform.position)
                - new Vector3(0,_dimensions.y / 2,0);
-
-        private void OnEnable() => _refreshCoroutine = StartCoroutine(RefreshCoroutine());
-        
-        private void OnDisable() => StopCoroutine(_refreshCoroutine);
 
         /// <summary> Visualize the GroundCheck for Debugging </summary>
         public void OnDrawGizmos() {
@@ -40,14 +35,12 @@ namespace GameProgramming.Movement {
             Gizmos.color = Grounded ?  Color.green : Color.red;
             Gizmos.DrawCube(_hitBoxCenter, _dimensions);
         }
-
-        private IEnumerator RefreshCoroutine() {
-            while (isActiveAndEnabled) {
-                RefreshGrounded();
-                yield return new WaitForSeconds(_refreshRate);
-            }
-        }
         
+        protected override void HandleSubscription(TimeManager manager, bool subscribe) {
+            if (subscribe) manager.OnPostTick += RefreshGrounded;
+            else manager.OnPostTick -= RefreshGrounded;
+        }
+
         private void RefreshGrounded() {
             int mask = LayerMask.GetMask("Ground");
 

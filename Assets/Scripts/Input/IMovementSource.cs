@@ -15,8 +15,8 @@ namespace AlexMod.Input {
     }
     
     /* It's strongly recommended to use structures for your data.
- * Datas are cached on client and server, and will create garbage
- * if you use a class. */
+     * Datas are cached on client and server, and will create garbage
+     * if you use a class. */
 
     /* MoveData may be named whatever you like. In my script it's used to
      * store client inputs, which are later used to move the object identically
@@ -24,10 +24,12 @@ namespace AlexMod.Input {
     public struct MoveData {
         
         public Vector2 Movement;
+        public Vector2 Look;
         public bool Jumping;
         
-        public MoveData(Vector2 movement, bool jumping) {
+        public MoveData(Vector2 movement, Vector2 look, bool jumping) {
             Movement = movement;
+            Look = look;
             Jumping = jumping;
         }
     }

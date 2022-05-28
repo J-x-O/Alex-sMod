@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
 using AlexMod.Input;
+using AlexMod.Movement.Behaviour;
+using AlexMod.Utility;
+using FishNet.Managing.Timing;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Object.Synchronizing;
@@ -7,7 +11,7 @@ using UnityEngine;
 
 namespace AlexMod {
 
-    public class MovementSystem : NetworkBehaviour {
+    public class MovementSystem : NetworkBehaviourTimeSubscribtion {
         
         /* ReconcileData may also be named differently. This contains data about how
          * to reset the object to the server values. These values will be sent to the client. */
@@ -24,60 +28,34 @@ namespace AlexMod {
             }
         }
         
-        /// <summary> How much force to add per move. </summary>
-        [SerializeField] private float _moveRate = 30f;
-        
-        /// <summary> Rigidbody on this object. </summary>
         [SerializeField] private Rigidbody _rigidbody;
 
-        // to detect changes
-        // [SyncVar] private bool _lastJumpInput = false;
-        
-        private bool _subscribed = false;
+        [SerializeReference, SerializeReferenceButton] private List<MovementBehaviour> _behaviours;
+
         private IMovementSource _source;
 
         /// <summary> Registers the provided MovementSource, which will then be used for the input </summary>
         public void RegisterMovementSource(IMovementSource source) => _source = source;
 
-        /// <summary> Subscribe or unsubscribe to the TimeManager for Tick events. </summary>
-        private void SubscribeToTimeManager(bool subscribe) {
-            
-            //TimeManager could be null if exiting the application or not yet initialized.
-            if (TimeManager == null) return;
+        private void Awake() {
+            foreach (MovementBehaviour behaviour in _behaviours) {
+                behaviour.Initialize(this, _rigidbody);
+            }
+            Debug.Log($"Initialized Movement on {(IsServer ? "Server" : "Client")}");
+        }
 
-            // If already subscribed/unsubscribed there is no need to do it again.
-            if (subscribe == _subscribed) return;
-            _subscribed = subscribe;
-
+        protected override void HandleSubscription(TimeManager manager, bool subscribe) {
             if (subscribe) {
-                TimeManager.OnTick += TimeManager_OnTick;
-                TimeManager.OnPostTick += TimeManager_OnPostTick;
+                manager.OnTick += OnTimeManagerTick;
+                manager.OnPostTick += OnTimeManagerPostTick;
             }
             else {
-                TimeManager.OnTick -= TimeManager_OnTick;
-                TimeManager.OnPostTick -= TimeManager_OnPostTick;
+                manager.OnTick -= OnTimeManagerTick;
+                manager.OnPostTick -= OnTimeManagerPostTick;
             }
         }
-
-        // we dont want the events to go to null objects
-        private void OnDestroy() => SubscribeToTimeManager(false);
-
         
-        /* The TimeManager won't be set until at least
-         * OnStartClient or OnStartServer, so do not
-         * try to subscribe before these events. */
-        public override void OnStartClient() {
-            base.OnStartClient();
-            SubscribeToTimeManager(true);
-        }
-
-        public override void OnStartServer() {
-            base.OnStartServer();
-            SubscribeToTimeManager(true);
-        }
-
-        /* OnTick is the equivalent to FixedUpdate */
-        private void TimeManager_OnTick() {
+        private void OnTimeManagerTick() {
             
             if (IsOwner) {
                 /* Reconciliation must be done first.
@@ -110,10 +88,9 @@ namespace AlexMod {
                  * OnPostTick and send the Reconcile here. */
             }
         }
-
-        /* OnPostTick is after physics have simulated for the tick. */
-        private void TimeManager_OnPostTick()
-        {
+        
+        private void OnTimeManagerPostTick() {
+            
             /* Build the reconcile using current data of the object. This is sent to the client, and the
              * client will reset using these values. It's EXTREMELY important to send anything that might
              * affect the movement, position, and rotation of the object. This includes but is not limited to: 
@@ -165,8 +142,10 @@ namespace AlexMod {
              * input may be called multiple times, but replaying will be true. You can filter
              * out playing the audio/vfx multiple times by not running the logic if replaying
              * is true. */
-            Vector3 force = new Vector3(data.Movement.x, 0f, data.Movement.y) * _moveRate;
-            _rigidbody.AddForce(force);
+            
+            foreach (MovementBehaviour behaviour in _behaviours) {
+                behaviour.HandleMovement(data, asServer, replaying);
+            }
         }
 
         /* Reconcile is responsible for resetting the clients object using data from
@@ -186,7 +165,5 @@ namespace AlexMod {
             _rigidbody.velocity = data.Velocity;
             _rigidbody.angularVelocity = data.AngularVelocity;
         }
-
     }
-
 }
